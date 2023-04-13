@@ -21,6 +21,9 @@ jobs:
         with:
           # terraform_version: 1.4.2
           cli_config_credentials_token: ${{ secrets.TF_API_TOKEN }}
+    
+      - name: Select Terraform Cloud workspace
+        run: terraform workspace select Lab-development
 
       - name: Terraform Format
         id: fmt
