@@ -35,22 +35,50 @@ resource "aws_route_table" "lab" {
   tags = { Name = "ex_public_rt" }
 }
 
-resource "aws_subnet" "lab-public" {
+# Make three subnets, each in a different AZ
+resource "aws_subnet" "lab-public-0" {
   vpc_id                  = aws_vpc.lab.id
-  cidr_block              = "10.0.1.0/24"
+  cidr_block              = "10.0.0.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
-  tags                    = { Name = "${var.prefix}-SN-public" }
+  tags                    = { Name = "${var.prefix}-SN-public-0" }
 }
 
-# Associate the subnet and the route table
-resource "aws_route_table_association" "public-access" {
-  subnet_id      = aws_subnet.lab-public.id
+resource "aws_subnet" "lab-public-1" {
+  vpc_id                  = aws_vpc.lab.id
+  cidr_block              = "10.0.1.0/24"
+  availability_zone       = "us-east-1b"
+  map_public_ip_on_launch = true
+  tags                    = { Name = "${var.prefix}-SN-public-1" }
+}
+
+resource "aws_subnet" "lab-public-2" {
+  vpc_id                  = aws_vpc.lab.id
+  cidr_block              = "10.0.2.0/24"
+  availability_zone       = "us-east-1c"
+  map_public_ip_on_launch = true
+  tags                    = { Name = "${var.prefix}-SN-public-2" }
+}
+
+# Associate the subnets with the public route table
+resource "aws_route_table_association" "public-access-0" {
+  subnet_id      = aws_subnet.lab-public-0.id
   route_table_id = aws_route_table.lab.id
 }
 
-resource "aws_security_group" "webserver-SG" {
-  name        = "webserver-SG"
+resource "aws_route_table_association" "public-access-1" {
+  subnet_id      = aws_subnet.lab-public-1.id
+  route_table_id = aws_route_table.lab.id
+}
+
+resource "aws_route_table_association" "public-access-2" {
+  subnet_id      = aws_subnet.lab-public-2.id
+  route_table_id = aws_route_table.lab.id
+}
+
+# Make a security group
+resource "aws_security_group" "lab" {
+  name        = "${var.prefix}-SG"
   description = "allow SSH and HTTP"
   vpc_id      = aws_vpc.lab.id
   ingress {
@@ -76,14 +104,14 @@ resource "aws_security_group" "webserver-SG" {
   }
 }
 
+
 # Deploy an EC2 instace
-resource "aws_instance" "EC2" {
-  count           = 2
+resource "aws_instance" "EC2-0" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
-  subnet_id       = aws_subnet.lab-public.id
-  security_groups = [aws_security_group.webserver-SG.id]
+  subnet_id       = aws_subnet.lab-public-0.id
+  security_groups = [aws_security_group.lab.id]
   user_data       = <<-EOF
                 #!/bin/bash
                 yum install httpd -y
@@ -93,9 +121,123 @@ resource "aws_instance" "EC2" {
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
                 <h2>'Meow World!'</h2> \
                 <body> \
-                'Welcome to ${var.environment}'s app. Replace this text with your own.' \
+                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
                 </body> \
                 </html>" > /var/www/html/index.html
                 EOF
-  tags            = { Name = "EC2-${var.prefix}-${count.index}" }
+  tags            = { Name = "EC2-${var.prefix}-0" }
+}
+
+resource "aws_instance" "EC2-1" {
+  ami             = "ami-006dcf34c09e50022"
+  instance_type   = "t2.micro"
+  key_name        = "kris_desktop"
+  subnet_id       = aws_subnet.lab-public-1.id
+  security_groups = [aws_security_group.lab.id]
+  user_data       = <<-EOF
+                #!/bin/bash
+                yum install httpd -y
+                systemctl restart httpd
+                systemctl enable httpd
+                echo "<html><body> \
+                <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
+                <h2>'Meow World!'</h2> \
+                <body> \
+                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
+                </body> \
+                </html>" > /var/www/html/index.html
+                EOF
+  tags            = { Name = "EC2-${var.prefix}-1" }
+}
+
+resource "aws_instance" "EC2-2" {
+  ami             = "ami-006dcf34c09e50022"
+  instance_type   = "t2.micro"
+  key_name        = "kris_desktop"
+  subnet_id       = aws_subnet.lab-public-2.id
+  security_groups = [aws_security_group.lab.id]
+  user_data       = <<-EOF
+                #!/bin/bash
+                yum install httpd -y
+                systemctl restart httpd
+                systemctl enable httpd
+                echo "<html><body> \
+                <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
+                <h2>'Meow World!'</h2> \
+                <body> \
+                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
+                </body> \
+                </html>" > /var/www/html/index.html
+                EOF
+  tags            = { Name = "EC2-${var.prefix}-2" }
+}
+
+
+# Create Load balancer
+
+resource "aws_lb" "alb" {
+  name               = "${var.prefix}-alb"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.lab.id]
+
+  subnets = [
+    aws_subnet.lab-public-0.id,
+    aws_subnet.lab-public-1.id,
+    aws_subnet.lab-public-2.id,
+  ]
+
+  tags = {
+    Environment = "${var.prefix}"
+  }
+}
+
+# Create Listener for load balancer
+
+resource "aws_lb_listener" "alb_http" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.alb_target_group.arn
+    type             = "forward"
+  }
+}
+
+# Create alb target group for load balancer
+
+resource "aws_lb_target_group" "alb_target_group" {
+  name_prefix = "my-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = aws_vpc.lab.id
+  health_check {
+    path = "/"
+  }
+
+  tags = {
+    Environment = "${var.prefix}"
+  }
+}
+
+# Register EC2 instances to target group
+
+resource "aws_lb_target_group_attachment" "lab-0" {
+  target_group_arn = aws_lb_target_group.alb_target_group.id
+  target_id        = aws_instance.EC2-0.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "lab-1" {
+  target_group_arn = aws_lb_target_group.alb_target_group.id
+  target_id        = aws_instance.EC2-1.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "lab-2" {
+  target_group_arn = aws_lb_target_group.alb_target_group.id
+  target_id        = aws_instance.EC2-2.id
+  port             = 80
 }
