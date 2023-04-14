@@ -104,15 +104,6 @@ resource "aws_security_group" "lab" {
   }
 }
 
-# Create Target Group
-
-resource "aws_lb_target_group" "lab" {
-  name     = "${var.prefix}-lb-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.lab.id
-}
-
 
 # Deploy an EC2 instace
 resource "aws_instance" "EC2-0" {
@@ -181,7 +172,29 @@ resource "aws_instance" "EC2-2" {
   tags            = { Name = "EC2-${var.prefix}-2" }
 }
 
+
+# Create Target Group
+
+resource "aws_lb_target_group" "lab" {
+  name     = "${var.prefix}-lb-tg"
+  port     = 80
+  protocol = "HTTP"
+  vpc_id   = aws_vpc.lab.id
+}
+
+resource "aws_lb_target_group_attachment" "lab-0" {
+  target_group_arn = aws_lb_target_group.lab.arn
+  target_id        = aws_instance.EC2-0.id
+  port             = 80
+}
+
 resource "aws_lb_target_group_attachment" "lab-1" {
+  target_group_arn = aws_lb_target_group.lab.arn
+  target_id        = aws_instance.EC2-0.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "lab-2" {
   target_group_arn = aws_lb_target_group.lab.arn
   target_id        = aws_instance.EC2-0.id
   port             = 80
