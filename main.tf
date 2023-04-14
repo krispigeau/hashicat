@@ -190,12 +190,24 @@ resource "aws_lb_target_group_attachment" "lab-0" {
 
 resource "aws_lb_target_group_attachment" "lab-1" {
   target_group_arn = aws_lb_target_group.lab.arn
-  target_id        = aws_instance.EC2-0.id
+  target_id        = aws_instance.EC2-1.id
   port             = 80
 }
 
 resource "aws_lb_target_group_attachment" "lab-2" {
   target_group_arn = aws_lb_target_group.lab.arn
-  target_id        = aws_instance.EC2-0.id
+  target_id        = aws_instance.EC2-2.id
   port             = 80
+}
+
+resource "aws_lb" "lab" {
+  name               = "${var.prefix}-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.lab.id]
+  subnets            = [aws_subnet.lab-public-0.id]
+
+  tags = {
+    Environment = "${var.prefix}"
+  }
 }
