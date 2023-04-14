@@ -97,7 +97,7 @@ resource "aws_instance" "EC2" {
                 <!-- END --> \
                 </div> \
                 </body> \
-                </html> > /var/www/index.html
+                </html>" > /var/www/html/index.html
                 EOF
   tags            = { Name = "EC2-${var.prefix}" }
 }
