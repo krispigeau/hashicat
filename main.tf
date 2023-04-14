@@ -17,40 +17,40 @@ provider "aws" {
 
 # Create a new VPC block
 resource "aws_vpc" "lab" {
-  cidr_block           = "142.55.0.0/16"
+  cidr_block           = "10.0.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
   tags                 = { Name = "vpc-${var.prefix}" }
 }
 
 # Create internet gateway
-resource "aws_internet_gateway" "igw-example" {
+resource "aws_internet_gateway" "lab" {
   vpc_id = aws_vpc.lab.id
-  tags   = { Name = "igw-example" }
+  tags   = { Name = "igw-${var.prefix}" }
 }
 
 # Create Public Route Table
-resource "aws_route_table" "public-practice-RT" {
+resource "aws_route_table" "lab" {
   vpc_id = aws_vpc.lab.id
   route {
     cidr_block = "0.0.0.0/0"
-    gateway_id = aws_internet_gateway.igw-example.id
+    gateway_id = aws_internet_gateway.lab.id
   }
   tags = { Name = "ex_public_rt" }
 }
 
-resource "aws_subnet" "public-example-subnet" {
+resource "aws_subnet" "lab-public" {
   vpc_id                  = aws_vpc.lab.id
-  cidr_block              = "142.55.1.0/24"
+  cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
-  tags                    = { Name = "example-SN-public" }
+  tags                    = { Name = "${var.prefix}-SN-public" }
 }
 
 # Associate the subnet and the route table
 resource "aws_route_table_association" "public-access" {
-  subnet_id      = aws_subnet.public-example-subnet.id
-  route_table_id = aws_route_table.public-practice-RT.id
+  subnet_id      = aws_subnet.lab-public.id
+  route_table_id = aws_route_table.lab.id
 }
 
 resource "aws_security_group" "webserver-SG" {
@@ -85,7 +85,7 @@ resource "aws_instance" "EC2" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
-  subnet_id       = aws_subnet.public-example-subnet.id
+  subnet_id       = aws_subnet.lab-public.id
   security_groups = [aws_security_group.webserver-SG.id]
   user_data       = <<-EOF
                 #!/bin/bash
