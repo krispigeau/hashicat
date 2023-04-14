@@ -119,7 +119,7 @@ resource "aws_instance" "EC2-0" {
                 systemctl enable httpd
                 echo "<html><body> \
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
-                <h2>'Meow World!'</h2> \
+                <h2>'${var.hello} World!'</h2> \
                 <body> \
                 'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
                 </body> \
@@ -141,7 +141,7 @@ resource "aws_instance" "EC2-1" {
                 systemctl enable httpd
                 echo "<html><body> \
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
-                <h2>'Meow World!'</h2> \
+                <h2>'${var.hello} World!'</h2> \
                 <body> \
                 'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
                 </body> \
@@ -163,7 +163,7 @@ resource "aws_instance" "EC2-2" {
                 systemctl enable httpd
                 echo "<html><body> \
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
-                <h2>'Meow World!'</h2> \
+                <h2>'${var.hello} World!'</h2> \
                 <body> \
                 'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
                 </body> \
