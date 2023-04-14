@@ -207,7 +207,7 @@ resource "aws_lb" "lab" {
   security_groups    = [aws_security_group.lab.id]
   subnets            = [aws_subnet.lab-public-0.id]
 
-  resource "aws_s3_bucket" "lb_logs" {
+  resource "aws_s3_bucket" "lab" {
     bucket = "my-tf-test-bucket"
 
     tags = {
@@ -217,7 +217,7 @@ resource "aws_lb" "lab" {
   }
 
   access_logs {
-    bucket  = aws_s3_bucket.lb_logs.id
+    bucket  = aws_s3_bucket.lab.id
     prefix  = "test-lb"
     enabled = true
   }
