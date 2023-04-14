@@ -3,7 +3,7 @@ terraform {
     hostname     = "app.terraform.io"
     organization = "KrisCo"
     workspaces {
-      name = "Lab-production"
+      prefix = "Lab-"
     }
   }
 }
