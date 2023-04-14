@@ -102,5 +102,5 @@ resource "aws_instance" "EC2" {
 
 
 output "web-address" {
-  value = aws_instance.EC2.public_dns
+  value = aws_instance.EC2[count.index].public_dns
 }
