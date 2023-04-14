@@ -20,7 +20,7 @@ resource "aws_vpc" "vpc-practice" {
   cidr_block           = "142.55.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
-  tags                 = { Name = "vpc-practice" }
+  tags                 = { Name = "vpc-${var.prefix}" }
 }
 
 # Create internet gateway
