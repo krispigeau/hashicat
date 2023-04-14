@@ -16,7 +16,7 @@ provider "aws" {
 }
 
 # Create a new VPC block
-resource "aws_vpc" "vpc-practice" {
+resource "aws_vpc" "lab" {
   cidr_block           = "142.55.0.0/16"
   enable_dns_support   = true
   enable_dns_hostnames = true
@@ -25,13 +25,13 @@ resource "aws_vpc" "vpc-practice" {
 
 # Create internet gateway
 resource "aws_internet_gateway" "igw-example" {
-  vpc_id = aws_vpc.vpc-practice.id
+  vpc_id = aws_vpc.lab.id
   tags   = { Name = "igw-example" }
 }
 
 # Create Public Route Table
 resource "aws_route_table" "public-practice-RT" {
-  vpc_id = aws_vpc.vpc-practice.id
+  vpc_id = aws_vpc.lab.id
   route {
     cidr_block = "0.0.0.0/0"
     gateway_id = aws_internet_gateway.igw-example.id
@@ -40,7 +40,7 @@ resource "aws_route_table" "public-practice-RT" {
 }
 
 resource "aws_subnet" "public-example-subnet" {
-  vpc_id                  = aws_vpc.vpc-practice.id
+  vpc_id                  = aws_vpc.lab.id
   cidr_block              = "142.55.1.0/24"
   availability_zone       = "us-east-1a"
   map_public_ip_on_launch = true
@@ -56,7 +56,7 @@ resource "aws_route_table_association" "public-access" {
 resource "aws_security_group" "webserver-SG" {
   name        = "webserver-SG"
   description = "allow SSH and HTTP"
-  vpc_id      = aws_vpc.vpc-practice.id
+  vpc_id      = aws_vpc.lab.id
   ingress {
     description = "Allow SSH"
     from_port   = 22
@@ -97,7 +97,7 @@ resource "aws_instance" "EC2" {
                 systemctl restart docker
                 docker run -itd -p 27017:27017 mongo
                 EOF
-  tags            = { Name = "Ec2-terraformed" }
+  tags            = { Name = "EC2-${var.prefix}" }
 }
 
 
