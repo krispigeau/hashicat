@@ -88,16 +88,13 @@ resource "aws_instance" "EC2" {
                 yum install httpd -y
                 systemctl restart httpd
                 systemctl enable httpd
-                echo "<html><head><title>Meow!</title></head> \
-                <body> <div style="width:800px;margin: 0 auto"> \
-                <!-- BEGIN --> \
-                <center><img src="http://${var.placeholder}/${var.width}/${var.height}"></img></center> \
-                <center><h2>Meow World!</h2></center> \
-                Welcome to ${var.environment}'s app. Replace this text with your own. \
-                <!-- END --> \
-                </div> \
+                echo "<html><body> \
+                <img src="http://${var.placeholder}/${var.width}/${var.height}"></img> \
+                <h2>"Meow World!"</h2> \
+                <body> \
+                "Welcome to ${var.environment}'s app. Replace this text with your own." \
                 </body> \
-                </html>" > /var/www/html/index.html
+                </html>" > var/www/index.html
                 EOF
   tags            = { Name = "EC2-${var.prefix}" }
 }
