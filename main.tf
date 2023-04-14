@@ -176,7 +176,7 @@ resource "aws_instance" "EC2-2" {
 # Create Target Group
 
 resource "aws_lb" "alb" {
-  name               = "my-alb"
+  name               = "${var.prefix}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lab.id]
@@ -188,7 +188,7 @@ resource "aws_lb" "alb" {
   ]
 
   tags = {
-    Environment = "dev"
+    Environment = "${var.prefix}"
   }
 }
 
@@ -204,7 +204,7 @@ resource "aws_lb_listener" "alb_http" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  name_prefix = "my-tg"
+  name_prefix = "${var.prefix}-tg"
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
@@ -214,7 +214,7 @@ resource "aws_lb_target_group" "alb_target_group" {
   }
 
   tags = {
-    Environment = "dev"
+    Environment = "${var.prefix}"
   }
 }
 
