@@ -121,7 +121,7 @@ resource "aws_instance" "EC2-0" {
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
                 <h2>'${var.hello} World!'</h2> \
                 <body> \
-                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
+                'Welcome to ${var.prefix}'s app. Hello from $(hostname -f)' \
                 </body> \
                 </html>" > /var/www/html/index.html
                 EOF
@@ -143,7 +143,7 @@ resource "aws_instance" "EC2-1" {
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
                 <h2>'${var.hello} World!'</h2> \
                 <body> \
-                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
+                'Welcome to ${var.prefix}'s app. Hello from $(hostname -f)' \
                 </body> \
                 </html>" > /var/www/html/index.html
                 EOF
@@ -165,7 +165,7 @@ resource "aws_instance" "EC2-2" {
                 <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
                 <h2>'${var.hello} World!'</h2> \
                 <body> \
-                'Welcome to ${var.environment}'s app. Hello from $(hostname -f)' \
+                'Welcome to ${var.prefix}'s app. Hello from $(hostname -f)' \
                 </body> \
                 </html>" > /var/www/html/index.html
                 EOF
