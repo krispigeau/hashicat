@@ -188,7 +188,7 @@ resource "aws_lb" "alb" {
   ]
 
   tags = {
-    Environment = "dev"
+    Environment = "${var.prefix}"
   }
 }
 
