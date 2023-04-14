@@ -200,7 +200,14 @@ resource "aws_lb_target_group_attachment" "lab-2" {
   port             = 80
 }
 
-resource "aws_elb_attachment" "baz" {
-  elb      = aws_lb_target_group.lab.arn.id
-  instance = aws_instance.EC2-2.id
+resource "aws_lb" "lab" {
+  name               = "${var.prefix}-load-balancer"
+  internal           = false
+  load_balancer_type = "application"
+  security_groups    = [aws_security_group.lab.id]
+  subnets            = [aws_subnet.lab-public-0.id]
+
+  tags = {
+    Environment = "${var.prefix}"
+  }
 }
