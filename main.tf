@@ -115,7 +115,7 @@ resource "aws_lb_target_group" "lab" {
 
 
 # Deploy an EC2 instace
-resource "aws_instance" "EC2" {
+resource "aws_instance" "EC2-0" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
@@ -137,7 +137,7 @@ resource "aws_instance" "EC2" {
   tags            = { Name = "EC2-${var.prefix}-0" }
 }
 
-resource "aws_instance" "EC2" {
+resource "aws_instance" "EC2-1" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
@@ -159,7 +159,7 @@ resource "aws_instance" "EC2" {
   tags            = { Name = "EC2-${var.prefix}-1" }
 }
 
-resource "aws_instance" "EC2" {
+resource "aws_instance" "EC2-2" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
