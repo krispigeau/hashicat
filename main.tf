@@ -210,20 +210,48 @@ resource "aws_s3_bucket" "lab" {
   }
 }
 
-resource "aws_lb" "lab" {
-  name               = "${var.prefix}-load-balancer"
+resource "aws_security_group" "lb_sg" {
+  name_prefix = "lb-sg"
+}
+
+resource "aws_lb" "alb" {
+  name               = "my-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.lab.id]
-  subnets            = [aws_subnet.lab-public-0.id, aws_subnet.lab-public-1.id]
+  security_groups    = [aws_security_group.lb_sg.id]
 
-  access_logs {
-    bucket  = aws_s3_bucket.lab.id
-    prefix  = "test-lb"
-    enabled = true
+  subnets = [
+    aws_subnet.lab-public-0.id,
+    aws_subnet.lab-public-1.id,
+  ]
+
+  tags = {
+    Environment = "dev"
+  }
+}
+
+resource "aws_lb_listener" "alb_http" {
+  load_balancer_arn = aws_lb.alb.arn
+  port              = "80"
+  protocol          = "HTTP"
+
+  default_action {
+    target_group_arn = aws_lb_target_group.alb_target_group.arn
+    type             = "forward"
+  }
+}
+
+resource "aws_lb_target_group" "alb_target_group" {
+  name_prefix        = "my-tg"
+  port               = 80
+  protocol           = "HTTP"
+  target_type        = "instance"
+  vpc_id             = aws_vpc.lab.id
+  health_check {
+    path = "/"
   }
 
   tags = {
-    Environment = "${var.prefix}"
+    Environment = "dev"
   }
 }
