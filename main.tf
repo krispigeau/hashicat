@@ -1,7 +1,3 @@
-# Copyright (c) HashiCorp, Inc.
-# SPDX-License-Identifier: MPL-2.0
-
-
 terraform {
   required_providers {
     aws = {
@@ -92,10 +88,16 @@ resource "aws_instance" "EC2" {
                 yum install httpd -y
                 systemctl restart httpd
                 systemctl enable httpd
-                yum install docker -y
-                usermod -aG docker ec2-user_data
-                systemctl restart docker
-                docker run -itd -p 27017:27017 mongo
+                echo "<html><head><title>Meow!</title></head> \
+                <body> <div style="width:800px;margin: 0 auto"> \
+                <!-- BEGIN --> \
+                <center><img src="http://${var.placeholder}/${var.width}/${var.height}"></img></center> \
+                <center><h2>Meow World!</h2></center> \
+                Welcome to ${var.environment}'s app. Replace this text with your own. \
+                <!-- END --> \
+                </div> \
+                </body> \
+                </html> > /var/www/index.html
                 EOF
   tags            = { Name = "EC2-${var.prefix}" }
 }
