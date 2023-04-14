@@ -200,21 +200,22 @@ resource "aws_lb_target_group_attachment" "lab-2" {
   port             = 80
 }
 
+
+resource "aws_s3_bucket" "lab" {
+  bucket = "my-tf-test-bucket"
+
+  tags = {
+    Name        = "My bucket"
+    Environment = "Dev"
+  }
+}
+
 resource "aws_lb" "lab" {
   name               = "${var.prefix}-load-balancer"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lab.id]
   subnets            = [aws_subnet.lab-public-0.id]
-
-  resource "aws_s3_bucket" "lab" {
-    bucket = "my-tf-test-bucket"
-
-    tags = {
-      Name        = "My bucket"
-      Environment = "Dev"
-    }
-  }
 
   access_logs {
     bucket  = aws_s3_bucket.lab.id
