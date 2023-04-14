@@ -210,15 +210,11 @@ resource "aws_s3_bucket" "lab" {
   }
 }
 
-resource "aws_security_group" "lb_sg" {
-  name_prefix = "lb-sg"
-}
-
 resource "aws_lb" "alb" {
   name               = "my-alb"
   internal           = false
   load_balancer_type = "application"
-  security_groups    = [aws_security_group.lb_sg.id]
+  security_groups    = [aws_security_group.lab.id]
 
   subnets = [
     aws_subnet.lab-public-0.id,
