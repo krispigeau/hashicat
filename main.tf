@@ -61,17 +61,17 @@ resource "aws_subnet" "lab-public-3" {
 }
 
 # Associate the subnets with the public route table
-resource "aws_route_table_association" "public-access" {
+resource "aws_route_table_association" "public-access-1" {
   subnet_id      = aws_subnet.lab-public-1.id
   route_table_id = aws_route_table.lab.id
 }
 
-resource "aws_route_table_association" "public-access" {
+resource "aws_route_table_association" "public-access-2" {
   subnet_id      = aws_subnet.lab-public-2.id
   route_table_id = aws_route_table.lab.id
 }
 
-resource "aws_route_table_association" "public-access" {
+resource "aws_route_table_association" "public-access-3" {
   subnet_id      = aws_subnet.lab-public-3.id
   route_table_id = aws_route_table.lab.id
 }
