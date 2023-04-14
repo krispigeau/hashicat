@@ -203,7 +203,6 @@ resource "aws_lb_target_group_attachment" "lab-2" {
 
 resource "aws_s3_bucket" "lab" {
   bucket = "my-tf-test-bucket-kpasdass8838s8dfsd8f93sdf"
-  acl    = "private"
 
   tags = {
     Name        = "My bucket"
@@ -216,7 +215,7 @@ resource "aws_lb" "lab" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lab.id]
-  subnets            = [aws_subnet.lab-public-0.id]
+  subnets            = [aws_subnet.lab-public-0.id, aws_subnet.lab-public-1.id]
 
   access_logs {
     bucket  = aws_s3_bucket.lab.id
