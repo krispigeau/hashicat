@@ -20,16 +20,11 @@ variable "width" {
 }
 
 variable "placeholder" {
-  default     = "baconmockup.com"
-  description = "Image-as-a-service URL. Some other fun ones to try are fillmurray.com, placecage.com, placebeard.it, loremflickr.com, baconmockup.com, placeimg.com, placebear.com, placeskull.com, stevensegallery.com, placedog.net"
+  default     = "placekitten.com"
+  description = "placekitten.com, baconmockup.com"
 }
 
 variable "hello" {
-  default     = "Bacon"
+  default     = "Meow"
   description = "change the word in hello world statment"
-}
-
-variable "environment" {
-  description = "Environment parameter to provide uniqueness per environment"
-  default     = "development"
 }
