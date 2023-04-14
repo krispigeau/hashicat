@@ -36,7 +36,7 @@ resource "aws_route_table" "lab" {
 }
 
 # Make three subnets, each in a different AZ
-resource "aws_subnet" "lab-public-0" {
+resource "aws_subnet" "lab_public_0" {
   vpc_id                  = aws_vpc.lab.id
   cidr_block              = "10.0.0.0/24"
   availability_zone       = "us-east-1a"
@@ -44,7 +44,7 @@ resource "aws_subnet" "lab-public-0" {
   tags                    = { Name = "${var.prefix}-SN-public-0" }
 }
 
-resource "aws_subnet" "lab-public-1" {
+resource "aws_subnet" "lab_public_1" {
   vpc_id                  = aws_vpc.lab.id
   cidr_block              = "10.0.1.0/24"
   availability_zone       = "us-east-1b"
@@ -52,7 +52,7 @@ resource "aws_subnet" "lab-public-1" {
   tags                    = { Name = "${var.prefix}-SN-public-1" }
 }
 
-resource "aws_subnet" "lab-public-2" {
+resource "aws_subnet" "lab_public_2" {
   vpc_id                  = aws_vpc.lab.id
   cidr_block              = "10.0.2.0/24"
   availability_zone       = "us-east-1c"
@@ -61,18 +61,18 @@ resource "aws_subnet" "lab-public-2" {
 }
 
 # Associate the subnets with the public route table
-resource "aws_route_table_association" "public-access-0" {
-  subnet_id      = aws_subnet.lab-public-0.id
+resource "aws_route_table_association" "public_access_0" {
+  subnet_id      = aws_subnet.lab_public_0.id
   route_table_id = aws_route_table.lab.id
 }
 
-resource "aws_route_table_association" "public-access-1" {
-  subnet_id      = aws_subnet.lab-public-1.id
+resource "aws_route_table_association" "public_access_1" {
+  subnet_id      = aws_subnet.lab_public_1.id
   route_table_id = aws_route_table.lab.id
 }
 
-resource "aws_route_table_association" "public-access-2" {
-  subnet_id      = aws_subnet.lab-public-2.id
+resource "aws_route_table_association" "public_access_2" {
+  subnet_id      = aws_subnet.lab_public_2.id
   route_table_id = aws_route_table.lab.id
 }
 
@@ -120,7 +120,7 @@ resource "aws_instance" "EC2" {
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
-  subnet_id       = aws_subnet.lab-public-[count.index].id
+  subnet_id       = aws_subnet.lab_public_[count.index].id
   security_groups = [aws_security_group.lab.id]
   user_data       = <<-EOF
                 #!/bin/bash
