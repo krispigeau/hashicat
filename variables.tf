@@ -20,11 +20,11 @@ variable "width" {
 }
 
 variable "placeholder" {
-  default     = "placekitten.com"
+  default     = "baconmockup.com"
   description = "placekitten.com, baconmockup.com"
 }
 
 variable "hello" {
-  default     = "Meow"
+  default     = "Bacon"
   description = "change the word in hello world statment"
 }
