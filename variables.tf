@@ -26,5 +26,5 @@ variable "placeholder" {
 
 variable "environment" {
   description = "Environment parameter to provide uniqueness per environment"
-  default = "development"
+  default     = "development"
 }
