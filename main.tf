@@ -219,19 +219,19 @@ resource "aws_lb_target_group" "alb_target_group" {
 }
 
 resource "aws_lb_target_group_attachment" "lab-0" {
-  target_group_arn = aws_lb_target_group.alb_target_group
+  target_group_arn = aws_lb_target_group.alb_target_group.id
   target_id        = aws_instance.EC2-0.id
   port             = 80
 }
 
 resource "aws_lb_target_group_attachment" "lab-1" {
-  target_group_arn = aws_lb_target_group.alb_target_group
+  target_group_arn = aws_lb_target_group.alb_target_group.id
   target_id        = aws_instance.EC2-1.id
   port             = 80
 }
 
 resource "aws_lb_target_group_attachment" "lab-2" {
-  target_group_arn = aws_lb_target_group.alb_target_group
+  target_group_arn = aws_lb_target_group.alb_target_group.id
   target_id        = aws_instance.EC2-2.id
   port             = 80
 }
