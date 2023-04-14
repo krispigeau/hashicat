@@ -173,7 +173,7 @@ resource "aws_instance" "EC2-2" {
 }
 
 
-# Create Target Group
+# Create Load balancer
 
 resource "aws_lb" "alb" {
   name               = "${var.prefix}-alb"
@@ -192,6 +192,8 @@ resource "aws_lb" "alb" {
   }
 }
 
+# Create Listener for load balancer
+
 resource "aws_lb_listener" "alb_http" {
   load_balancer_arn = aws_lb.alb.arn
   port              = "80"
@@ -203,8 +205,10 @@ resource "aws_lb_listener" "alb_http" {
   }
 }
 
+# Create alb target group for load balancer
+
 resource "aws_lb_target_group" "alb_target_group" {
-  name_prefix = "my-tg"
+  name_prefix = "${var.prefix}-tg"
   port        = 80
   protocol    = "HTTP"
   target_type = "instance"
@@ -214,9 +218,11 @@ resource "aws_lb_target_group" "alb_target_group" {
   }
 
   tags = {
-    Environment = "dev"
+    Environment = "${var.prefix}"
   }
 }
+
+# Register EC2 instances to target group
 
 resource "aws_lb_target_group_attachment" "lab-0" {
   target_group_arn = aws_lb_target_group.alb_target_group.id
