@@ -203,6 +203,7 @@ resource "aws_lb_target_group_attachment" "lab-2" {
 
 resource "aws_s3_bucket" "lab" {
   bucket = "my-tf-test-bucket"
+  acl    = "private"
 
   tags = {
     Name        = "My bucket"
