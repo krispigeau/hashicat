@@ -94,7 +94,7 @@ resource "aws_instance" "EC2" {
                 <body> \
                 "Welcome to ${var.environment}'s app. Replace this text with your own." \
                 </body> \
-                </html>" > var/www/index.html
+                </html>" > /var/www/index.html
                 EOF
   tags            = { Name = "EC2-${var.prefix}" }
 }
