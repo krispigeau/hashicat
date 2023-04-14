@@ -175,41 +175,6 @@ resource "aws_instance" "EC2-2" {
 
 # Create Target Group
 
-resource "aws_lb_target_group" "lab" {
-  name     = "${var.prefix}-lb-tg"
-  port     = 80
-  protocol = "HTTP"
-  vpc_id   = aws_vpc.lab.id
-}
-
-resource "aws_lb_target_group_attachment" "lab-0" {
-  target_group_arn = aws_lb_target_group.lab.arn
-  target_id        = aws_instance.EC2-0.id
-  port             = 80
-}
-
-resource "aws_lb_target_group_attachment" "lab-1" {
-  target_group_arn = aws_lb_target_group.lab.arn
-  target_id        = aws_instance.EC2-1.id
-  port             = 80
-}
-
-resource "aws_lb_target_group_attachment" "lab-2" {
-  target_group_arn = aws_lb_target_group.lab.arn
-  target_id        = aws_instance.EC2-2.id
-  port             = 80
-}
-
-
-resource "aws_s3_bucket" "lab" {
-  bucket = "my-tf-test-bucket-kpasdass8838s8dfsd8f93sdf"
-
-  tags = {
-    Name        = "My bucket"
-    Environment = "Dev"
-  }
-}
-
 resource "aws_lb" "alb" {
   name               = "my-alb"
   internal           = false
@@ -219,6 +184,7 @@ resource "aws_lb" "alb" {
   subnets = [
     aws_subnet.lab-public-0.id,
     aws_subnet.lab-public-1.id,
+    aws_subnet.lab-public-2.id,
   ]
 
   tags = {
@@ -250,4 +216,22 @@ resource "aws_lb_target_group" "alb_target_group" {
   tags = {
     Environment = "dev"
   }
+}
+
+resource "aws_lb_target_group_attachment" "lab-0" {
+  target_group_arn = aws_lb_target_group.alb_target_group
+  target_id        = aws_instance.EC2-0.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "lab-1" {
+  target_group_arn = aws_lb_target_group.alb_target_group
+  target_id        = aws_instance.EC2-1.id
+  port             = 80
+}
+
+resource "aws_lb_target_group_attachment" "lab-2" {
+  target_group_arn = aws_lb_target_group.alb_target_group
+  target_id        = aws_instance.EC2-2.id
+  port             = 80
 }
