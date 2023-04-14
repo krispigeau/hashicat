@@ -89,12 +89,12 @@ resource "aws_instance" "EC2" {
                 systemctl restart httpd
                 systemctl enable httpd
                 echo "<html><body> \
-                <img src="http://${var.placeholder}/${var.width}/${var.height}"></img> \
-                <h2>"Meow World!"</h2> \
+                <img src='http://${var.placeholder}/${var.width}/${var.height}'></img> \
+                <h2>'Meow World!'</h2> \
                 <body> \
-                "Welcome to ${var.environment}'s app. Replace this text with your own." \
+                'Welcome to ${var.environment}'s app. Replace this text with your own.' \
                 </body> \
-                </html>" > /var/www/index.html
+                </html>" > /var/www/html/index.html
                 EOF
   tags            = { Name = "EC2-${var.prefix}" }
 }
