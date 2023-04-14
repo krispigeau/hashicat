@@ -242,11 +242,11 @@ resource "aws_lb_listener" "alb_http" {
 }
 
 resource "aws_lb_target_group" "alb_target_group" {
-  name_prefix        = "my-tg"
-  port               = 80
-  protocol           = "HTTP"
-  target_type        = "instance"
-  vpc_id             = aws_vpc.lab.id
+  name_prefix = "my-tg"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "instance"
+  vpc_id      = aws_vpc.lab.id
   health_check {
     path = "/"
   }
