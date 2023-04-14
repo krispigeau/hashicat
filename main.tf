@@ -99,8 +99,3 @@ resource "aws_instance" "EC2" {
                 EOF
   tags            = { Name = "EC2-${var.prefix}-${count.index}" }
 }
-
-
-output "web-address" {
-  value = aws_instance.EC2[count.index].public_dns
-}
