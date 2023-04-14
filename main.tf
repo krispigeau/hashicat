@@ -180,3 +180,9 @@ resource "aws_instance" "EC2-2" {
                 EOF
   tags            = { Name = "EC2-${var.prefix}-2" }
 }
+
+resource "aws_lb_target_group_attachment" "lab-1" {
+  target_group_arn = aws_lb_target_group.lab.arn
+  target_id        = aws_instance.EC2-0.id
+  port             = 80
+}
