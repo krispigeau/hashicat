@@ -78,6 +78,7 @@ resource "aws_security_group" "webserver-SG" {
 
 # Deploy an EC2 instace
 resource "aws_instance" "EC2" {
+  count = 2
   ami             = "ami-006dcf34c09e50022"
   instance_type   = "t2.micro"
   key_name        = "kris_desktop"
@@ -96,7 +97,7 @@ resource "aws_instance" "EC2" {
                 </body> \
                 </html>" > /var/www/html/index.html
                 EOF
-  tags            = { Name = "EC2-${var.prefix}" }
+  tags            = { Name = "EC2-${var.prefix}-${count.index}" }
 }
 
 
