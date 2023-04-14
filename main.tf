@@ -176,7 +176,7 @@ resource "aws_instance" "EC2-2" {
 # Create Target Group
 
 resource "aws_lb" "alb" {
-  name               = "my-alb"
+  name               = "${var.prefix}-alb"
   internal           = false
   load_balancer_type = "application"
   security_groups    = [aws_security_group.lab.id]
